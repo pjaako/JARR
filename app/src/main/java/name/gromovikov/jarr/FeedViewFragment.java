@@ -1,6 +1,8 @@
 package name.gromovikov.jarr;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -68,7 +71,7 @@ public class FeedViewFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(List<RssRecord> result) {
+        protected void onPostExecute(final List<RssRecord> result) {
 
             // Get a ListView from main view
             ListView feedListView = (ListView) rootView.findViewById(R.id.listView);
@@ -79,7 +82,16 @@ public class FeedViewFragment extends Fragment {
             feedListView.setAdapter(adapter);
 
             // Set list view item click listener
-
+            feedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent i = new Intent();
+                    i.setAction(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(result.get(position).getLink()));
+                    startActivity(i);
+                }
+            }
+            );
         }
     }
 }
