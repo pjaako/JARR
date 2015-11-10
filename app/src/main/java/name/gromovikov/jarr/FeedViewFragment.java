@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +24,18 @@ import java.util.List;
 public class FeedViewFragment extends Fragment {
     //public static final String FEEDURL = "http://ladybyron.net/feed/rss/";
     public static final String FEEDURL = "http://4pda.ru/feed/rss/";
+    public static final int VIEW_MODE_BROWSER = 0;
+    public static final int VIEW_MODE_WEBVIEW = 1;
+    public static final int VIEW_MODE_PARSED = 2;
+    public static final int POST_VIEW_MODE = VIEW_MODE_BROWSER;
+
     public FeedViewFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
@@ -85,10 +96,20 @@ public class FeedViewFragment extends Fragment {
             feedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent i = new Intent();
-                    i.setAction(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(result.get(position).getLink()));
-                    startActivity(i);
+                    if (POST_VIEW_MODE == VIEW_MODE_WEBVIEW){
+
+                    }
+                    else if (POST_VIEW_MODE == VIEW_MODE_PARSED){
+
+                    }
+                    else {
+                        //open link in a browser by default
+                        Intent i = new Intent();
+                        i.setAction(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(result.get(position).getLink()));
+                        startActivity(i);
+                    }
+
                 }
             }
             );

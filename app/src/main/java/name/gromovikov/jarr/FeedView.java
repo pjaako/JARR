@@ -1,5 +1,6 @@
 package name.gromovikov.jarr;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebViewFragment;
 
 public class FeedView extends AppCompatActivity {
 
@@ -18,6 +20,7 @@ public class FeedView extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /* we probably will return to this later - pja
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -26,6 +29,19 @@ public class FeedView extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        */
+//        if (savedInstanceState != null) {
+//            return;
+//        }
+
+        FeedViewFragment feedViewFragment = new FeedViewFragment();
+        feedViewFragment.setArguments(getIntent().getExtras());
+        PostViewFragment postViewFragment = new PostViewFragment();
+        postViewFragment.setArguments(getIntent().getExtras());
+
+        getFragmentManager().beginTransaction()
+                .add(R.id.fragment, feedViewFragment).commit();
+
     }
 
     @Override
