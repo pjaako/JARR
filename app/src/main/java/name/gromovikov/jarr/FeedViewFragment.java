@@ -1,5 +1,6 @@
 package name.gromovikov.jarr;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -27,7 +28,13 @@ public class FeedViewFragment extends Fragment {
     public static final int VIEW_MODE_BROWSER = 0;
     public static final int VIEW_MODE_WEBVIEW = 1;
     public static final int VIEW_MODE_PARSED = 2;
-    public static final int POST_VIEW_MODE = VIEW_MODE_BROWSER;
+    private int postViewMode = VIEW_MODE_WEBVIEW;
+    private OnPostSelectedListener onPostSelectedListener;
+
+
+    public interface OnPostSelectedListener {
+        void onPostSelected(String url);
+    }
 
     public FeedViewFragment() {
     }
@@ -37,12 +44,27 @@ public class FeedViewFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
     }
+    //TODO - Deprecation issues - onAttach-23 gets Context - might work now but needs fixing - pja
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            onPostSelectedListener = (OnPostSelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View feedView = inflater.inflate(R.layout.fragment_feed_view, container, false);
-        GetRSSDataTask task = new GetRSSDataTask(getContext(),feedView);
+        GetRSSDataTask task = new GetRSSDataTask(getActivity(),feedView);
 
         // Start download RSS task
         task.execute(FEEDURL);
@@ -96,11 +118,11 @@ public class FeedViewFragment extends Fragment {
             feedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (POST_VIEW_MODE == VIEW_MODE_WEBVIEW){
-
+                    if (postViewMode == VIEW_MODE_WEBVIEW){
+                        onPostSelectedListener.onPostSelected(result.get(position).getLink());
                     }
-                    else if (POST_VIEW_MODE == VIEW_MODE_PARSED){
-
+                    else if (postViewMode == VIEW_MODE_PARSED){
+                        ;
                     }
                     else {
                         //open link in a browser by default

@@ -1,6 +1,7 @@
 package name.gromovikov.jarr;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,7 +12,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebViewFragment;
 
-public class FeedView extends AppCompatActivity {
+public class FeedView extends AppCompatActivity
+        implements FeedViewFragment.OnPostSelectedListener {
+
+    private FeedViewFragment feedViewFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,18 +35,47 @@ public class FeedView extends AppCompatActivity {
             }
         });
         */
-//        if (savedInstanceState != null) {
-//            return;
-//        }
+        if (savedInstanceState == null) {
 
-        FeedViewFragment feedViewFragment = new FeedViewFragment();
-        feedViewFragment.setArguments(getIntent().getExtras());
+            feedViewFragment = new FeedViewFragment();
+            feedViewFragment.setArguments(getIntent().getExtras());
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.fragment, feedViewFragment);
+
+            fragmentTransaction.commit();
+        }
+
+    }
+
+    public void onPostSelected(String url) {
+
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack
+        //fragmentTransaction.addToBackStack(null);
         PostViewFragment postViewFragment = new PostViewFragment();
-        postViewFragment.setArguments(getIntent().getExtras());
+        Bundle bundle = new Bundle();
+        bundle.putString("url", url);
+        postViewFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.fragment, postViewFragment);
 
-        getFragmentManager().beginTransaction()
-                .add(R.id.fragment, feedViewFragment).commit();
+        fragmentTransaction.addToBackStack(null);
+        // Commit the transaction
+        fragmentTransaction.commit();
 
+    }
+
+    //return to previous (list) fragment on "back" key
+    //TODO - have I to do this explicitly or is it supposed to work by itself? (it doesn't) - pja
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
