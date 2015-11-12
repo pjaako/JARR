@@ -24,7 +24,6 @@ public class NewsDb {
     /* Inner class that defines the table contents */
     public abstract class Entry implements BaseColumns {
         public static final String TABLE_NAME = "entries";
-        public static final String COLUMN_NAME_ENTRY_ID = "id";
         public static final String COLUMN_NAME_TITLE = "title";
         public static final String COLUMN_NAME_LINK = "link";
         public static final String COLUMN_NAME_BRIEF = "brief";
@@ -37,12 +36,11 @@ public class NewsDb {
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + Entry.TABLE_NAME + " (" +
                     Entry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT"
-                    + COMMA_SEP + Entry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE
                     + COMMA_SEP + Entry.COLUMN_NAME_TITLE + TEXT_TYPE
                     + COMMA_SEP + Entry.COLUMN_NAME_LINK + TEXT_TYPE
                     + COMMA_SEP + Entry.COLUMN_NAME_BRIEF + TEXT_TYPE
                     + COMMA_SEP + Entry.COLUMN_NAME_TEXT + TEXT_TYPE
-                    + COMMA_SEP + "UNIQUE " + Entry.COLUMN_NAME_LINK
+                    + COMMA_SEP + "UNIQUE (" + Entry.COLUMN_NAME_LINK + ")"
             +" )";
 
     private static final String SQL_DELETE_ENTRIES =
@@ -58,12 +56,11 @@ public class NewsDb {
             values.put(Entry.COLUMN_NAME_TITLE, postMeta.getTitle());
             values.put(Entry.COLUMN_NAME_LINK, postMeta.getLink());
 
-            // Insert the new row, on non-uniqe Link or other error return -1
+            // INSERT the new row, return new id
+            // OR IGNORE insertion and return existing ID if link exists
             long newRowId;
-            newRowId = db.insert(
-                    Entry.COLUMN_NAME_TITLE,
-                    Entry.COLUMN_NAME_LINK,
-                    values);
+            newRowId = db.insertWithOnConflict(
+                    Entry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 
 
         }
@@ -73,7 +70,7 @@ public class NewsDb {
     public class Helper extends SQLiteOpenHelper {
         // If you change the database schema, you must increment the database version.
         public static final int DATABASE_VERSION = 1;
-        public static final String DATABASE_NAME = "FeedReader.db";
+        public static final String DATABASE_NAME = "news.db";
 
         public Helper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);

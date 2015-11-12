@@ -13,6 +13,7 @@ public class FeedView extends AppCompatActivity
         implements FeedViewFragment.OnPostSelectedListener {
 
     private FeedViewFragment feedViewFragment;
+    private NewsDb newsDb;
 
     //those should be put in settings in a normal project
     public static final String FEEDURL = "http://4pda.ru/feed/rss/";
@@ -22,6 +23,7 @@ public class FeedView extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed_view);
+        newsDb = new NewsDb(this);
         /* we probably will return to this later - pja
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -56,9 +58,8 @@ public class FeedView extends AppCompatActivity
         FeedParser feedParser = new FeedParser(new FeedParser.OnFeedParsedListener() {
             @Override
             public void onFeedParsed(List<NewsEntry> feed) {
-                for (NewsEntry feedEntry : feed){
-                    Log.d (LOGTAG, feedEntry.getTitle());
-                }
+                    newsDb.addFromFeed(feed);
+
             }
         });
 
