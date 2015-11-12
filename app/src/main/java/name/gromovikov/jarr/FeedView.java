@@ -13,11 +13,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebViewFragment;
 
+import java.util.List;
+
 public class FeedView extends AppCompatActivity
         implements FeedViewFragment.OnPostSelectedListener {
 
     private FeedViewFragment feedViewFragment;
 
+    //those should be put in settings in a normal project
+    public static final String FEEDURL = "http://4pda.ru/feed/rss/";
+    public static final String LOGTAG = "JARR";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +42,33 @@ public class FeedView extends AppCompatActivity
             }
         });
         */
-        if (savedInstanceState == null) {
+
+        //check and load new post if post base is empty..
+        loadNewPosts();
+        //..OR the user has swiped down to re-check
+
+/*        if (savedInstanceState == null) {
 
             feedViewFragment = new FeedViewFragment();
             feedViewFragment.setArguments(getIntent().getExtras());
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.add(R.id.fragment, feedViewFragment);
             fragmentTransaction.commit();
-        }
+        }*/
+
+    }
+
+    private void loadNewPosts(){
+        FeedParser feedParser = new FeedParser(new FeedParser.OnFeedParsedListener() {
+            @Override
+            public void onFeedParsed(List<RssRecord> feed) {
+                for (RssRecord feedEntry : feed){
+                    Log.d (LOGTAG, feedEntry.getTitle());
+                }
+            }
+        });
+
+        feedParser.execute(FEEDURL);
 
     }
 

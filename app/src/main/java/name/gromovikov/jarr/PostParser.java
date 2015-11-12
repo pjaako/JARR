@@ -10,8 +10,11 @@ import org.jsoup.select.Elements;
 
 /**
  * Created by pja on 12.11.2015.
+ * fetches html page by a given link and pulls out (almost) all text from a div class=content
  * Based on https://github.com/survivingwithandroid/Surviving-with-android/tree/master/AndroidJSoup
  */
+
+
 public class PostParser extends AsyncTask<String, Void, String> {
 
     private OnPostParsedListener onPostParsedListener;
@@ -34,6 +37,7 @@ public class PostParser extends AsyncTask<String, Void, String> {
             // Get document (HTML page) title
             String title = doc.title();
             Log.d("JARR", "Title ["+title+"]");
+            buffer.append("["+title+"]");
             //String postText = doc.select(".content_box").text();
             //buffer.append("Post text: " + postText + "\r\n");
             Elements contentElements = doc.select("div.content p, div.content h2 , div.content li");
@@ -42,29 +46,11 @@ public class PostParser extends AsyncTask<String, Void, String> {
 
                buffer.append(elem.text() + "\r\n");
             }
-            buffer.append("the end \r\n");
-/*            buffer.append("Title: " + title + "\r\n");
 
-            // Get meta info
-            Elements metaElems = doc.select("meta");
-            buffer.append("META DATA\r\n");
-            for (Element metaElem : metaElems) {
-                String name = metaElem.attr("name");
-                String content = metaElem.attr("content");
-                buffer.append("name ["+name+"] - content ["+content+"] \r\n");
-            }
-
-            Elements topicList = doc.select("h2.topic");
-            buffer.append("Topic list\r\n");
-            for (Element topic : topicList) {
-                String data = topic.text();
-
-                buffer.append("Data ["+data+"] \r\n");
-            }*/
 
         }
         catch(Throwable t) {
-            t.printStackTrace();
+            buffer.append ("No post text \r\n");
         }
 
         return buffer.toString();
@@ -80,6 +66,6 @@ public class PostParser extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
         onPostParsedListener.onPostParsed(s);
-        //respText.setText(s);
+
     }
 }
