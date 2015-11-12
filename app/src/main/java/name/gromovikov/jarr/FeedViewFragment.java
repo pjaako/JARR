@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -26,9 +25,9 @@ public class FeedViewFragment extends Fragment {
     //public static final String FEEDURL = "http://ladybyron.net/feed/rss/";
     public static final String FEEDURL = "http://4pda.ru/feed/rss/";
     public static final int VIEW_MODE_BROWSER = 0;
-    public static final int VIEW_MODE_WEBVIEW = 1;
+    public static final int VIEW_MODE_RENDERED = 1;
     public static final int VIEW_MODE_PARSED = 2;
-    private int postViewMode = VIEW_MODE_WEBVIEW;
+    private int postViewMode = VIEW_MODE_PARSED;
     private OnPostSelectedListener onPostSelectedListener;
 
 
@@ -118,11 +117,18 @@ public class FeedViewFragment extends Fragment {
             feedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (postViewMode == VIEW_MODE_WEBVIEW){
+                    if (postViewMode == VIEW_MODE_RENDERED){
                         onPostSelectedListener.onPostSelected(result.get(position).getLink());
                     }
                     else if (postViewMode == VIEW_MODE_PARSED){
-                        ;
+                        ( new PostParser(new PostParser.OnPostParsedListener() {
+                            @Override
+                            public void onPostParsed(String s) {
+                                    Log.d("JARR",s);
+                            }
+                        }
+
+                        ) ).execute(result.get(position).getLink());
                     }
                     else {
                         //open link in a browser by default
