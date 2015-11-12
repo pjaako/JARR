@@ -14,7 +14,7 @@ import javax.xml.parsers.SAXParserFactory;
 /**
  * Created by pja on 12.11.2015.
  */
-public class FeedParser extends AsyncTask<String, Void, List<RssRecord> > {
+public class FeedParser extends AsyncTask<String, Void, List<NewsEntry> > {
 
     private OnFeedParsedListener onFeedParsedListener;
 
@@ -23,11 +23,11 @@ public class FeedParser extends AsyncTask<String, Void, List<RssRecord> > {
     }
 
     public interface OnFeedParsedListener{
-        void onFeedParsed(List<RssRecord> feed);
+        void onFeedParsed(List<NewsEntry> feed);
     }
 
     @Override
-    protected List<RssRecord> doInBackground(String... urls) {
+    protected List<NewsEntry> doInBackground(String... urls) {
 
         try {
             URL  url = new URL(urls[0]);
@@ -58,7 +58,7 @@ public class FeedParser extends AsyncTask<String, Void, List<RssRecord> > {
     }
 
     @Override
-    protected void onPostExecute(final List<RssRecord> result) {
+    protected void onPostExecute(final List<NewsEntry> result) {
         super.onPostExecute(result);
         onFeedParsedListener.onFeedParsed(result);
     }

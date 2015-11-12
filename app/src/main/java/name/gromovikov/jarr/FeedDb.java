@@ -36,8 +36,8 @@ public class FeedDb  {
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + FeedEntry.TABLE_NAME;
 
-    public void addFromFeed(List<RssRecord> feed){
-        for (RssRecord postMeta : feed){
+    public void addFromFeed(List<NewsEntry> feed){
+        for (NewsEntry postMeta : feed){
 
         }
 

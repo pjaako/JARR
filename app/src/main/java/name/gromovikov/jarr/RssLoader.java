@@ -1,7 +1,6 @@
 package name.gromovikov.jarr;
 
 import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -33,7 +32,7 @@ public class RssLoader {
      *
      * @return
      */
-    public List<RssRecord> getItems() throws Exception {
+    public List<NewsEntry> getItems() throws Exception {
 
         URL url = new URL (rssUrl);
         InputStream inputStream = url.openStream();

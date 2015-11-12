@@ -72,7 +72,7 @@ public class FeedViewFragment extends Fragment {
 
     }
 
-    private class GetRSSDataTask extends AsyncTask<String, Void, List<RssRecord> > {
+    private class GetRSSDataTask extends AsyncTask<String, Void, List<NewsEntry> > {
 
         private Context context;
         private View rootView;
@@ -85,7 +85,7 @@ public class FeedViewFragment extends Fragment {
         }
 
         @Override
-        protected List<RssRecord> doInBackground(String... urls) {
+        protected List<NewsEntry> doInBackground(String... urls) {
 
 
             try {
@@ -103,13 +103,13 @@ public class FeedViewFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(final List<RssRecord> result) {
+        protected void onPostExecute(final List<NewsEntry> result) {
 
             // Get a ListView from main view
             ListView feedListView = (ListView) rootView.findViewById(R.id.listView);
 
             // Create a list adapter
-            ArrayAdapter<RssRecord> adapter = new ArrayAdapter<RssRecord>(context,android.R.layout.simple_list_item_1, result);
+            ArrayAdapter<NewsEntry> adapter = new ArrayAdapter<NewsEntry>(context,android.R.layout.simple_list_item_1, result);
             // Set list adapter for the ListView
             feedListView.setAdapter(adapter);
 

@@ -13,10 +13,10 @@ import java.util.List;
  */
 public class RssHandler extends DefaultHandler {
 
-    private List<RssRecord> RssRecords;
+    private List<NewsEntry> RssRecords;
 
     // Used to reference item while parsing
-    private RssRecord currentItem;
+    private NewsEntry currentItem;
 
     // Parsing title indicator
     private boolean parsingTitle;
@@ -24,17 +24,17 @@ public class RssHandler extends DefaultHandler {
     private boolean parsingLink;
 
     public RssHandler() {
-        RssRecords = new ArrayList<RssRecord>();
+        RssRecords = new ArrayList<NewsEntry>();
     }
 
-    public List<RssRecord> getItems() {
+    public List<NewsEntry> getItems() {
         return RssRecords;
     }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if ("item".equals(qName)) {
-            currentItem = new RssRecord();
+            currentItem = new NewsEntry();
         } else if ("title".equals(qName)) {
             parsingTitle = true;
         } else if ("link".equals(qName)) {
