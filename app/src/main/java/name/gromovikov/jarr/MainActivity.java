@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import java.util.List;
 
-public class FeedView extends AppCompatActivity
+public class MainActivity extends AppCompatActivity
         implements FeedViewFragment.OnPostSelectedListener {
 
     private FeedViewFragment feedViewFragment;
