@@ -17,6 +17,7 @@ import org.jsoup.select.Elements;
 
 public class PostParser extends AsyncTask<String, Void, String> {
 
+    public static final String POST_TEXT_ERROR = "No post text \r\n";
     private OnPostParsedListener onPostParsedListener;
 
     public PostParser (OnPostParsedListener onPostParsedListener){
@@ -50,7 +51,8 @@ public class PostParser extends AsyncTask<String, Void, String> {
 
         }
         catch(Throwable t) {
-            buffer.append ("No post text \r\n");
+
+            buffer.append (POST_TEXT_ERROR);
         }
 
         return buffer.toString();
