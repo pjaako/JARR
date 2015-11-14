@@ -74,6 +74,7 @@ public class NewsDb {
         return DatabaseUtils.queryNumEntries(db, Entry.TABLE_NAME)<1;
     }
 
+
     public Cursor findTextlessNews (){
         SQLiteDatabase db = helper.getReadableDatabase();
         // Define a projection that specifies which columns from the database
@@ -101,6 +102,34 @@ public class NewsDb {
 
         return cursor;
 
+    }
+
+    public Cursor getMetas () {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                Entry._ID,
+                Entry.COLUMN_NAME_LINK,
+                Entry.COLUMN_NAME_TITLE
+        };
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder = Entry._ID + " DESC";
+        //select entries with text not loaded or loaded with an error
+        //TODO - we have to stop trying to re-load errorneus posts after some attempts
+        //since we are going to end up with huge re-load operation for posts already deleted
+        Cursor cursor = db.query(
+                Entry.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                null,                              // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        return cursor;
     }
 
     public void addTextForLink (String text, String link){

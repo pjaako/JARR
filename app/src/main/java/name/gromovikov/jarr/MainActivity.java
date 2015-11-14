@@ -76,9 +76,11 @@ public class MainActivity extends AppCompatActivity
     private void loadNewPostTexts(){
         //get a list of post text to load
         Cursor cursor = newsDb.findTextlessNews();
+
         //load them one-by-one
         while (cursor.moveToNext())
             loadPostText(cursor.getString(cursor.getColumnIndex(NewsDb.Entry.COLUMN_NAME_LINK)));
+        cursor.close();
 
 
     }
