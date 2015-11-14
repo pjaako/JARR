@@ -28,6 +28,7 @@ public class RssHandler extends DefaultHandler {
     }
 
     public List<NewsEntry> getItems() {
+
         return RssRecords;
     }
 
