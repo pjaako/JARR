@@ -40,17 +40,17 @@ public class MainActivity extends AppCompatActivity
         */
 
         //check and load new post if post base is empty..
-        if (newsDb.isEmpty()) loadNews();
+        //if (newsDb.isEmpty()) loadNews();
         //..OR the user has swiped down to re-check
 
-/*        if (savedInstanceState == null) {
+        if (savedInstanceState == null) {
 
             feedViewFragment = new FeedViewFragment();
             feedViewFragment.setArguments(getIntent().getExtras());
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.fragment, feedViewFragment);
+            fragmentTransaction.replace(R.id.fragment, feedViewFragment);
             fragmentTransaction.commit();
-        }*/
+        }
 
     }
 
