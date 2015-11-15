@@ -1,12 +1,9 @@
 package name.gromovikov.jarr;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.webkit.WebViewFragment;
 
 /**
@@ -25,7 +22,7 @@ public class PostWebViewFragment extends WebViewFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View result= super.onCreateView(inflater, container, savedInstanceState);
+        View result = super.onCreateView(inflater, container, savedInstanceState);
         String url = getArguments().getString("url");
         getWebView().getSettings().setJavaScriptEnabled(true);
         // настройка масштабирования
@@ -33,10 +30,9 @@ public class PostWebViewFragment extends WebViewFragment {
         getWebView().getSettings().setBuiltInZoomControls(true);
         getWebView().loadUrl(url);
 
-        return(result);
+        return (result);
 
     }
-
 
 
 }

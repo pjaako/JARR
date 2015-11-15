@@ -1,10 +1,8 @@
 package name.gromovikov.jarr;
 
 import android.app.Activity;
-import android.content.Context;
-import android.database.Cursor;
 import android.app.Fragment;
-import android.os.AsyncTask;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -31,6 +29,7 @@ public class FeedViewFragment extends Fragment {
     private NewsDb newsDb;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView feedListView;
+
     public interface OnPostSelectedListener {
         void onPostSelected(long id);
     }
@@ -98,15 +97,15 @@ public class FeedViewFragment extends Fragment {
             }
         });
 
-        if (newsDb.isEmpty()){
+        if (newsDb.isEmpty()) {
             loadNews();
         }
 
         return feedView;
     }
 
-    private void loadNews(){
-        Log.i (LOG_TAG, "loadNews");
+    private void loadNews() {
+        Log.i(LOG_TAG, "loadNews");
         if (!swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(true);
         FeedParser feedParser = new FeedParser(new FeedParser.OnFeedParsedListener() {
             @Override
@@ -124,11 +123,11 @@ public class FeedViewFragment extends Fragment {
 
     }
 
-    private void loadNewPostTexts(){
-        Log.i (LOG_TAG, "loadNewPostTexts");
+    private void loadNewPostTexts() {
+        Log.i(LOG_TAG, "loadNewPostTexts");
         //get a list of post text to load
         Cursor cursor = newsDb.findTextlessNews();
-        Log.i (LOG_TAG, "texts to load: " + cursor.getCount());
+        Log.i(LOG_TAG, "texts to load: " + cursor.getCount());
         //load them one-by-one
         while (cursor.moveToNext())
             loadPostText(cursor.getString(cursor.getColumnIndex(NewsDb.Entry.COLUMN_NAME_LINK)));
@@ -139,8 +138,8 @@ public class FeedViewFragment extends Fragment {
 
     }
 
-    private void loadPostText(final String link){
-        Log.i (LOG_TAG, "loadPostText "+ link);
+    private void loadPostText(final String link) {
+        Log.i(LOG_TAG, "loadPostText " + link);
 
         //and it is also better to avoid a bunch of async parse tasks firing almost at one moment
         //newsDb.addTextForLink(PostParser.parsePost(link), link);
@@ -148,7 +147,7 @@ public class FeedViewFragment extends Fragment {
         PostParser postParser = new PostParser(new PostParser.OnPostParsedListener() {
             @Override
             public void onPostParsed(String text) {
-                newsDb.addTextForLink (text, link);
+                newsDb.addTextForLink(text, link);
             }
         });
 
@@ -156,7 +155,6 @@ public class FeedViewFragment extends Fragment {
 
 
     }
-
 
 
 }

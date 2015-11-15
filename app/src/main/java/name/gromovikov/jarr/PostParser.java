@@ -1,7 +1,6 @@
 package name.gromovikov.jarr;
 
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.jsoup.Jsoup;
@@ -21,19 +20,18 @@ public class PostParser extends AsyncTask<String, Void, String> {
     public static final String POST_TEXT_ERROR = "No post text \r\n";
     private OnPostParsedListener onPostParsedListener;
 
-    public PostParser (OnPostParsedListener onPostParsedListener){
+    public PostParser(OnPostParsedListener onPostParsedListener) {
         this.onPostParsedListener = onPostParsedListener;
     }
 
-    public interface OnPostParsedListener{
+    public interface OnPostParsedListener {
         void onPostParsed(String s);
     }
 
 
-
     @Override
     protected String doInBackground(String... strings) {
-         return parsePost(strings[0]);
+        return parsePost(strings[0]);
 
 
     }
@@ -43,25 +41,24 @@ public class PostParser extends AsyncTask<String, Void, String> {
         StringBuilder buffer = new StringBuilder();
         try {
             Log.d("JARR", "Connecting to [" + link + "]");
-            Document doc  = Jsoup.connect(link).get();
-            Log.d("JARR", "Connected to ["+ link +"]");
+            Document doc = Jsoup.connect(link).get();
+            Log.d("JARR", "Connected to [" + link + "]");
             // Get document (HTML page) title
             String title = doc.title();
-            Log.d("JARR", "Title ["+title+"]");
-            buffer.append(title+"\r\n\r\n");
+            Log.d("JARR", "Title [" + title + "]");
+            buffer.append(title + "\r\n\r\n");
             Elements contentElements = doc.select("div.content p, div.content h2 , div.content li");
 
             for (Element elem : contentElements) {
 
-               buffer.append(elem.text() + "\r\n");
+                buffer.append(elem.text() + "\r\n");
             }
 
 
-        }
-        catch(Throwable t) {
+        } catch (Throwable t) {
 
-            buffer.append (POST_TEXT_ERROR);
-            Log.e ("PPARS", t.toString());
+            buffer.append(POST_TEXT_ERROR);
+            Log.e("PPARS", t.toString());
         }
 
         return buffer.toString();

@@ -19,10 +19,11 @@ public class NewsDb {
     private Helper helper;
     private Context context;
 
-    NewsDb(Context context){
+    NewsDb(Context context) {
         this.context = context;
         this.helper = new Helper(context);
     }
+
     /* Inner class that defines the table contents */
     public abstract class Entry implements BaseColumns {
         public static final String TABLE_NAME = "entries";
@@ -43,13 +44,13 @@ public class NewsDb {
                     + COMMA_SEP + Entry.COLUMN_NAME_BRIEF + TEXT_TYPE
                     + COMMA_SEP + Entry.COLUMN_NAME_TEXT + TEXT_TYPE
                     + COMMA_SEP + "UNIQUE (" + Entry.COLUMN_NAME_LINK + ")"
-            +" )";
+                    + " )";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + Entry.TABLE_NAME;
 
-    public void addFromFeed(List<NewsEntry> feed){
-        for (NewsEntry postMeta : feed){
+    public void addFromFeed(List<NewsEntry> feed) {
+        for (NewsEntry postMeta : feed) {
             // Gets the data repository in write mode
             SQLiteDatabase db = helper.getWritableDatabase();
 
@@ -69,13 +70,13 @@ public class NewsDb {
 
     }
 
-    public boolean isEmpty (){
+    public boolean isEmpty() {
         SQLiteDatabase db = helper.getReadableDatabase();
-        return DatabaseUtils.queryNumEntries(db, Entry.TABLE_NAME)<1;
+        return DatabaseUtils.queryNumEntries(db, Entry.TABLE_NAME) < 1;
     }
 
 
-    public Cursor findTextlessNews (){
+    public Cursor findTextlessNews() {
         SQLiteDatabase db = helper.getReadableDatabase();
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
@@ -89,7 +90,7 @@ public class NewsDb {
         //TODO - we have to stop trying to re-load errorneus posts after some attempts
         //since we are going to end up with huge re-load operation for posts already deleted
         //String selection = "? is null or ? = '' or ? ='" + PostParser.POST_TEXT_ERROR+"'";
-        String selection = Entry.COLUMN_NAME_TEXT+" is null or " + Entry.COLUMN_NAME_TEXT + " = ''";
+        String selection = Entry.COLUMN_NAME_TEXT + " is null or " + Entry.COLUMN_NAME_TEXT + " = ''";
         //String[] selectionArgs = {Entry.COLUMN_NAME_TEXT,Entry.COLUMN_NAME_TEXT,Entry.COLUMN_NAME_TEXT};
         Cursor cursor = db.query(
                 Entry.TABLE_NAME,  // The table to query
@@ -106,7 +107,7 @@ public class NewsDb {
 
     }
 
-    public String getLinkById (long id){
+    public String getLinkById(long id) {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         //TODO won't work - obviously i am doing something stupid
@@ -119,8 +120,8 @@ public class NewsDb {
                 });*/
         Cursor cursor = db.rawQuery(
                 "select " + Entry.COLUMN_NAME_LINK
-                + " from " + Entry.TABLE_NAME
-                + " where " + Entry._ID + "=" + String.valueOf(id),
+                        + " from " + Entry.TABLE_NAME
+                        + " where " + Entry._ID + "=" + String.valueOf(id),
                 null
         );
         cursor.moveToFirst();
@@ -130,7 +131,7 @@ public class NewsDb {
 
     }
 
-    public String getTextById (long id){
+    public String getTextById(long id) {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
@@ -146,7 +147,7 @@ public class NewsDb {
 
     }
 
-    public Cursor getMetas () {
+    public Cursor getMetas() {
         SQLiteDatabase db = helper.getReadableDatabase();
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
@@ -174,7 +175,7 @@ public class NewsDb {
         return cursor;
     }
 
-    public void addTextForLink (String text, String link){
+    public void addTextForLink(String text, String link) {
         SQLiteDatabase db = helper.getWritableDatabase();
 
         // Create a new map of values, where column names are the keys
@@ -185,12 +186,10 @@ public class NewsDb {
         // OR IGNORE update if no such row in the table
         long updatedRowsCount;
         updatedRowsCount = db.updateWithOnConflict(Entry.TABLE_NAME, values, whereClause,
-                null,SQLiteDatabase.CONFLICT_IGNORE); //returns 1 since link is unique and exists.
-
+                null, SQLiteDatabase.CONFLICT_IGNORE); //returns 1 since link is unique and exists.
 
 
     }
-
 
 
     public class Helper extends SQLiteOpenHelper {
@@ -212,6 +211,7 @@ public class NewsDb {
             db.execSQL(SQL_DELETE_ENTRIES);
             onCreate(db);
         }
+
         public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             onUpgrade(db, oldVersion, newVersion);
         }

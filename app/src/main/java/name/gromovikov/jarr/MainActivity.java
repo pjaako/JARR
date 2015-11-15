@@ -6,14 +6,11 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity
         implements FeedViewFragment.OnPostSelectedListener {
@@ -43,20 +40,17 @@ public class MainActivity extends AppCompatActivity
 
 
         //if (savedInstanceState == null) {
-            Log.d(LOGTAG, "Initial fragment population");
-            feedViewFragment = new FeedViewFragment();
-            feedViewFragment.setArguments(getIntent().getExtras());
-            getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment, feedViewFragment);
-            fragmentTransaction.commit();
+        Log.d(LOGTAG, "Initial fragment population");
+        feedViewFragment = new FeedViewFragment();
+        feedViewFragment.setArguments(getIntent().getExtras());
+        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment, feedViewFragment);
+        fragmentTransaction.commit();
         //}
 
 
     }
-
-
-
 
 
     public void onPostSelected(long id) {
@@ -65,14 +59,12 @@ public class MainActivity extends AppCompatActivity
             Bundle bundle = new Bundle();
             Fragment fragmentToDisplay;
 
-            if (postViewMode == VIEW_MODE_PARSED ){
+            if (postViewMode == VIEW_MODE_PARSED) {
                 //get parsed text from database if it exists
                 String text = newsDb.getTextById(id);
                 bundle.putString("text", text);
                 fragmentToDisplay = new PostTextViewFragment();
-            }
-
-            else {
+            } else {
                 //get parsed text from database if it exists
                 String link = newsDb.getLinkById(id);
                 bundle.putString("url", link);
@@ -82,7 +74,7 @@ public class MainActivity extends AppCompatActivity
             fragmentToDisplay.setArguments(bundle);
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             //set the post in special fragment if available
-            if (findViewById(R.id.post_fragment) != null){
+            if (findViewById(R.id.post_fragment) != null) {
                 fragmentTransaction.replace(R.id.post_fragment, fragmentToDisplay);
             }
             //or insteadof the feed if no special place is found (stash feed to put back on "back" press)
@@ -103,14 +95,13 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-
     }
 
     //return to previous (list) fragment on "back" key
     //TODO - have I to do this explicitly or is it supposed to work by itself? (it doesn't) - pja
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
