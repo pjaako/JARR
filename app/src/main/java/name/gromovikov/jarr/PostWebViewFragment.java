@@ -12,7 +12,7 @@ import android.webkit.WebViewFragment;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PostViewFragment extends WebViewFragment {
+public class PostWebViewFragment extends WebViewFragment {
 
 
     @Override

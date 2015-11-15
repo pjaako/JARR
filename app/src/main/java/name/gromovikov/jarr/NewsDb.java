@@ -106,6 +106,46 @@ public class NewsDb {
 
     }
 
+    public String getLinkById (long id){
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        //TODO won't work - obviously i am doing something stupid
+        /*Cursor cursor = db.rawQuery("SELECT ? FROM ? WHERE ? = ?",
+                new String[]{
+                        Entry.COLUMN_NAME_LINK,
+                        Entry.TABLE_NAME,
+                        Entry._ID,
+                        String.valueOf(id)
+                });*/
+        Cursor cursor = db.rawQuery(
+                "select " + Entry.COLUMN_NAME_LINK
+                + " from " + Entry.TABLE_NAME
+                + " where " + Entry._ID + "=" + String.valueOf(id),
+                null
+        );
+        cursor.moveToFirst();
+        String link = cursor.getString(cursor.getColumnIndex(Entry.COLUMN_NAME_LINK));
+        cursor.close();
+        return link;
+
+    }
+
+    public String getTextById (long id){
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "select " + Entry.COLUMN_NAME_TEXT
+                        + " from " + Entry.TABLE_NAME
+                        + " where " + Entry._ID + "=" + String.valueOf(id),
+                null
+        );
+        cursor.moveToFirst();
+        String text = cursor.getString(cursor.getColumnIndex(Entry.COLUMN_NAME_TEXT));
+        cursor.close();
+        return text;
+
+    }
+
     public Cursor getMetas () {
         SQLiteDatabase db = helper.getReadableDatabase();
         // Define a projection that specifies which columns from the database

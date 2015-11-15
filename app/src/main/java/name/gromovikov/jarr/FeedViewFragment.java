@@ -1,11 +1,9 @@
 package name.gromovikov.jarr;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -26,10 +24,6 @@ public class FeedViewFragment extends Fragment {
     //public static final String FEEDURL = "http://ladybyron.net/feed/rss/";
     public static final String LOG_TAG = "FEEDFRAG";
     public static final String FEEDURL = "http://4pda.ru/feed/rss/";
-    public static final int VIEW_MODE_BROWSER = 0;
-    public static final int VIEW_MODE_RENDERED = 1;
-    public static final int VIEW_MODE_PARSED = 2;
-    private int postViewMode = VIEW_MODE_PARSED;
     private OnPostSelectedListener onPostSelectedListener;
     private SimpleCursorAdapter feedAdapter;
     private Cursor feedCursor;
@@ -37,7 +31,7 @@ public class FeedViewFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView feedListView;
     public interface OnPostSelectedListener {
-        void onPostSelected(String url);
+        void onPostSelected(long id);
     }
 
     public FeedViewFragment() {
@@ -90,25 +84,7 @@ public class FeedViewFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(LOG_TAG, String.format("selected id = %d", id));
-                String link = "somelink";
-                if (postViewMode == VIEW_MODE_RENDERED) {
-                    onPostSelectedListener.onPostSelected(link);
-                } else if (postViewMode == VIEW_MODE_PARSED) {
-                    (new PostParser(new PostParser.OnPostParsedListener() {
-                        @Override
-                        public void onPostParsed(String s) {
-                            Log.d(LOG_TAG, s);
-                        }
-                    }
-
-                    )).execute(link);
-                } else {
-                    //open link in a browser by default
-                    Intent i = new Intent();
-                    i.setAction(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(link));
-                    startActivity(i);
-                }
+                onPostSelectedListener.onPostSelected(id);
 
             }
         });
@@ -156,6 +132,7 @@ public class FeedViewFragment extends Fragment {
         while (cursor.moveToNext())
             loadPostText(cursor.getString(cursor.getColumnIndex(NewsDb.Entry.COLUMN_NAME_LINK)));
         cursor.close();
+        Log.i(LOG_TAG, "loadNewPostTexts complete");
         swipeRefreshLayout.setRefreshing(false);
 
 
@@ -163,19 +140,19 @@ public class FeedViewFragment extends Fragment {
 
     private void loadPostText(final String link){
         Log.i (LOG_TAG, "loadPostText "+ link);
-        //seems like we better parse syncronously since we're already in async task here
-        //and it is also better to avoid a bunch of async parse tasks firing almost at one moment
-        newsDb.addTextForLink(PostParser.parsePost(link), link);
 
-        /*PostParser postParser = new PostParser(new PostParser.OnPostParsedListener() {
+        //and it is also better to avoid a bunch of async parse tasks firing almost at one moment
+        //newsDb.addTextForLink(PostParser.parsePost(link), link);
+
+        PostParser postParser = new PostParser(new PostParser.OnPostParsedListener() {
             @Override
             public void onPostParsed(String text) {
                 newsDb.addTextForLink (text, link);
             }
         });
 
-        postParser.execute();
-        */
+        postParser.execute(link);
+
 
     }
 

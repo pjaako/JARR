@@ -33,7 +33,7 @@ public class PostParser extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... strings) {
-        return parsePost(strings[0]);
+         return parsePost(strings[0]);
 
 
     }
@@ -48,7 +48,7 @@ public class PostParser extends AsyncTask<String, Void, String> {
             // Get document (HTML page) title
             String title = doc.title();
             Log.d("JARR", "Title ["+title+"]");
-            buffer.append("["+title+"]");
+            buffer.append(title+"\r\n\r\n");
             //String postText = doc.select(".content_box").text();
             //buffer.append("Post text: " + postText + "\r\n");
             Elements contentElements = doc.select("div.content p, div.content h2 , div.content li");
@@ -63,7 +63,9 @@ public class PostParser extends AsyncTask<String, Void, String> {
         catch(Throwable t) {
 
             buffer.append (POST_TEXT_ERROR);
+            Log.e ("PPARS", t.toString());
         }
+
         return buffer.toString();
     }
 
@@ -76,6 +78,7 @@ public class PostParser extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
+
         onPostParsedListener.onPostParsed(s);
 
     }
