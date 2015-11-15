@@ -88,13 +88,15 @@ public class NewsDb {
         //select entries with text not loaded or loaded with an error
         //TODO - we have to stop trying to re-load errorneus posts after some attempts
         //since we are going to end up with huge re-load operation for posts already deleted
-        String selection = "? is null or ? = '' or ? =" + PostParser.POST_TEXT_ERROR;
-        String[] selectionArgs = {Entry.COLUMN_NAME_TEXT};
+        //String selection = "? is null or ? = '' or ? ='" + PostParser.POST_TEXT_ERROR+"'";
+        String selection = Entry.COLUMN_NAME_TEXT+" is null or " + Entry.COLUMN_NAME_TEXT + " = ''";
+        //String[] selectionArgs = {Entry.COLUMN_NAME_TEXT,Entry.COLUMN_NAME_TEXT,Entry.COLUMN_NAME_TEXT};
         Cursor cursor = db.query(
                 Entry.TABLE_NAME,  // The table to query
                 projection,                               // The columns to return
                 selection,                                // The columns for the WHERE clause
-                selectionArgs,                            // The values for the WHERE clause
+                //selectionArgs,                            // The values for the WHERE clause
+                null,
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
                 sortOrder                                 // The sort order
@@ -138,7 +140,7 @@ public class NewsDb {
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(Entry.COLUMN_NAME_TEXT, text);
-        String whereClause = Entry.COLUMN_NAME_LINK + "=" + link;
+        String whereClause = Entry.COLUMN_NAME_LINK + "='" + link + "'";
         // UPDATE the row, containing a link
         // OR IGNORE update if no such row in the table
         long updatedRowsCount;

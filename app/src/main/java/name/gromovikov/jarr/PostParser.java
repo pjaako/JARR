@@ -1,6 +1,7 @@
 package name.gromovikov.jarr;
 
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.jsoup.Jsoup;
@@ -28,13 +29,22 @@ public class PostParser extends AsyncTask<String, Void, String> {
         void onPostParsed(String s);
     }
 
+
+
     @Override
     protected String doInBackground(String... strings) {
-        StringBuffer buffer = new StringBuffer();
+        return parsePost(strings[0]);
+
+
+    }
+
+
+    public static String parsePost(String link) {
+        StringBuilder buffer = new StringBuilder();
         try {
-            Log.d("JARR", "Connecting to ["+strings[0]+"]");
-            Document doc  = Jsoup.connect(strings[0]).get();
-            Log.d("JARR", "Connected to ["+strings[0]+"]");
+            Log.d("JARR", "Connecting to [" + link + "]");
+            Document doc  = Jsoup.connect(link).get();
+            Log.d("JARR", "Connected to ["+ link +"]");
             // Get document (HTML page) title
             String title = doc.title();
             Log.d("JARR", "Title ["+title+"]");
@@ -54,7 +64,6 @@ public class PostParser extends AsyncTask<String, Void, String> {
 
             buffer.append (POST_TEXT_ERROR);
         }
-
         return buffer.toString();
     }
 

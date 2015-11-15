@@ -54,50 +54,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void loadNews(){
 
-
-        FeedParser feedParser = new FeedParser(new FeedParser.OnFeedParsedListener() {
-            @Override
-            public void onFeedParsed(List<NewsEntry> feed) {
-                    newsDb.addFromFeed(feed);
-                    //force feed view to display new metas
-
-                    //start loading full texts to make them available offline
-                loadNewPostTexts();
-
-            }
-        });
-
-        feedParser.execute(FEEDURL);
-
-    }
-
-    private void loadNewPostTexts(){
-        //get a list of post text to load
-        Cursor cursor = newsDb.findTextlessNews();
-
-        //load them one-by-one
-        while (cursor.moveToNext())
-            loadPostText(cursor.getString(cursor.getColumnIndex(NewsDb.Entry.COLUMN_NAME_LINK)));
-        cursor.close();
-
-
-    }
-
-    private void loadPostText(final String link){
-
-        PostParser postParser = new PostParser(new PostParser.OnPostParsedListener() {
-            @Override
-            public void onPostParsed(String text) {
-                newsDb.addTextForLink (text, link);
-            }
-        });
-
-        postParser.execute();
-
-
-    }
 
     public void onPostSelected(String url) {
 
