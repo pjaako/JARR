@@ -35,18 +35,12 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         newsDb = new NewsDb(this);
-        // we probably will return to this later - pja
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
         Log.d(LOGTAG, "OnCreate");
 
-
-
-        //check and load new post if post base is empty..
-        //if (newsDb.isEmpty()) loadNews();
-        //..OR the user has swiped down to re-check
 
         //if (savedInstanceState == null) {
             Log.d(LOGTAG, "Initial fragment population");

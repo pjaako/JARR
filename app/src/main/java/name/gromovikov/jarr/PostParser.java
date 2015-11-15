@@ -49,8 +49,6 @@ public class PostParser extends AsyncTask<String, Void, String> {
             String title = doc.title();
             Log.d("JARR", "Title ["+title+"]");
             buffer.append(title+"\r\n\r\n");
-            //String postText = doc.select(".content_box").text();
-            //buffer.append("Post text: " + postText + "\r\n");
             Elements contentElements = doc.select("div.content p, div.content h2 , div.content li");
 
             for (Element elem : contentElements) {
