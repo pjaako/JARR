@@ -1,5 +1,6 @@
 package name.gromovikov.jarr;
 
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
@@ -60,51 +61,34 @@ public class MainActivity extends AppCompatActivity
 
 
     public void onPostSelected(long id) {
-        if (postViewMode == VIEW_MODE_PARSED) {
+        if (postViewMode == VIEW_MODE_PARSED || postViewMode == VIEW_MODE_RENDERED) {
             //TODO parse and add text to database if it hasn't been cached yet
-
-            //get parsed text from database if it exists
-            String text = newsDb.getTextById(id);
-            posTextViewFragment = new PostTextViewFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("text", text);
-            posTextViewFragment.setArguments(bundle);
+            Fragment fragmentToDisplay;
+
+            if (postViewMode == VIEW_MODE_PARSED ){
+                //get parsed text from database if it exists
+                String text = newsDb.getTextById(id);
+                bundle.putString("text", text);
+                fragmentToDisplay = new PostTextViewFragment();
+            }
+
+            else {
+                //get parsed text from database if it exists
+                String link = newsDb.getLinkById(id);
+                bundle.putString("url", link);
+                fragmentToDisplay = new PostWebViewFragment();
+            }
+
+            fragmentToDisplay.setArguments(bundle);
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             //set the post in special fragment if available
             if (findViewById(R.id.post_fragment) != null){
-                fragmentTransaction.replace(R.id.post_fragment, posTextViewFragment);
+                fragmentTransaction.replace(R.id.post_fragment, fragmentToDisplay);
             }
             //or insteadof the feed if no special place is found (stash feed to put back on "back" press)
             else {
-                fragmentTransaction.replace(R.id.fragment, posTextViewFragment);
-                fragmentTransaction.addToBackStack(null);
-            }
-            // Commit the transaction
-            fragmentTransaction.commit();
-
-            //make a fragment with post content and insert it where appropriate
-            //Log.d(LOGTAG, "text to display: " + post);
-
-        }
-
-        else if (postViewMode == VIEW_MODE_RENDERED) {
-            String link = newsDb.getLinkById(id);
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the back stack
-            //fragmentTransaction.addToBackStack(null);
-            postWebViewFragment = new PostWebViewFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("url", link);
-            postWebViewFragment.setArguments(bundle);
-            //set the post in special fragment if available
-            if (findViewById(R.id.post_fragment) != null){
-                fragmentTransaction.replace(R.id.post_fragment, postWebViewFragment);
-            }
-            //or insteadof the feed if no special place is found (stash feed to put back on "back" press)
-            else {
-                fragmentTransaction.replace(R.id.fragment, postWebViewFragment);
+                fragmentTransaction.replace(R.id.fragment, fragmentToDisplay);
                 fragmentTransaction.addToBackStack(null);
             }
             // Commit the transaction
