@@ -1,5 +1,6 @@
 package name.gromovikov.jarr;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.app.Fragment;
@@ -45,7 +46,7 @@ public class FeedViewFragment extends Fragment {
 
     //TODO - Deprecation issues - onAttach-23 gets Context - might work now but needs fixing - pja
     @Override
-    public void onAttach(Context activity) {
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         // This makes sure that the container activity has implemented

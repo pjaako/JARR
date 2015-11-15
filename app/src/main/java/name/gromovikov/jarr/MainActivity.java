@@ -1,6 +1,7 @@
 package name.gromovikov.jarr;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
-
+        Log.d(LOGTAG, "OnCreate");
 
 
 
@@ -47,16 +48,20 @@ public class MainActivity extends AppCompatActivity
         //if (newsDb.isEmpty()) loadNews();
         //..OR the user has swiped down to re-check
 
-        if (savedInstanceState == null) {
-
+        //if (savedInstanceState == null) {
+            Log.d(LOGTAG, "Initial fragment population");
             feedViewFragment = new FeedViewFragment();
             feedViewFragment.setArguments(getIntent().getExtras());
+            getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment, feedViewFragment);
             fragmentTransaction.commit();
-        }
+        //}
+
 
     }
+
+
 
 
 
